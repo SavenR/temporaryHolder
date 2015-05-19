@@ -1,0 +1,56 @@
+{% load staticfiles %}
+<!DOCTYPE html>
+<html lang='en'>
+<head>
+    <title>Bananas</title>
+    <meta charSet="UTF-8">
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+<link rel="stylesheet" href="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/themes/smoothness/jquery-ui.css">
+<script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
+    <link rel="stylesheet" type="text/css" href="{% static 'peel/css/banana.css' %}">
+</head>
+<body>
+    <!-- <div class="container-fluid"> -->
+        <header class="nav container-fluid text-right">
+                    {% if user.is_authenticated %}
+        <a href="{% url 'logout' %}">Logout</a>
+    {% else %}
+        <a href="{% url 'login' %}">Login</a> | <a href="{% url 'register' %}">Register</a>
+    {% endif %}
+        </header>
+    <!-- </div> -->
+
+
+    {% block content %}{% endblock content %}
+
+
+    <footer class="row footer-inverse text-center">
+
+    <script>
+      $(function() {
+        $( ".datepicker" ).datepicker({
+          changeMonth: true,
+          changeYear: true,
+          yearRange: "1900:2012",
+          // You can put more options here.
+
+        });
+  });
+  </script>
+  <script type="template">
+        <h1>Welcome to my blog!</h1>
+    {{text}}
+    {% if request.user.is_authenticated %}
+        <p>Hi {{ request.user.get_username }} <a href="{% url 'logout' %}">Logout</a></p>
+        {{ user }}
+
+    {% else %}
+        <a href="{% url 'login' %}">Login</a>
+    {% endif %}
+
+
+  </script>
+</footer>
+</body>
+</html>
