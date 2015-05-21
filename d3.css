@@ -1,0 +1,43 @@
+body {
+    background: #eef;
+}
+
+div.scoreBox {
+    display: inline-block;
+    background-color: #fff;
+    width: 200px;
+    min-height: 20px;
+    border: 1px solid #777;
+    margin: 0;
+    padding: 0;
+    float: left;
+    text-align: center;
+    vertical-align: middle;
+}
+
+#gameCanvas {
+    /*background-color: #fff;*/
+}
+
+.enemy:nth-child(6n) {
+    fill: red;
+}
+.enemy:nth-child(6n+1) {
+    fill: orange;
+}
+.enemy:nth-child(6n+2) {
+    fill: yellow;
+}
+.enemy:nth-child(6n+3) {
+    fill: green;
+}
+.enemy:nth-child(6n+4) {
+    fill: blue;
+}
+.enemy:nth-child(6n+5) {
+    fill: purple;
+}
+
+/*#highScore {
+    float: right;
+}*/
