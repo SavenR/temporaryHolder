@@ -17,6 +17,7 @@ gameCanvas.attr('height', canvasSize.y).attr('width', canvasSize.x);
 
 var hero = d3.select('#hero'),
     heroRadius = 5;
+
 hero.data([{id: 7, x: canvasSize.x/5, y: canvasSize.y/5}]);
 hero.attr('cy', .5*canvasSize.y).attr('cx', .5*canvasSize.x).attr('r', heroRadius);
 // console.log(hero)
@@ -25,7 +26,7 @@ hero.attr('cy', .5*canvasSize.y).attr('cx', .5*canvasSize.x).attr('r', heroRadiu
 ////// ENEMY DATA ARRAY //////
 // Enemy radius
 var radius = 5,
-    numbOfEnemies = 1;
+    numbOfEnemies = 30;
 
 // this will randomly generate the circle's x and y coordinates
 coordinateGenerator = function( maxVal ){
@@ -73,10 +74,14 @@ d3.selectAll('.enemy')
 
 
 ////// TRANSITION //////
+var score = 0,
+    highScore = 0;
+
 function enemyActivity(){
-    var frequency = 1000
+    var frequency = 3000
     var enemy = d3.select(this);
-    console.log(enemy);
+
+
 
     (function move(){
         enemy = enemy
@@ -91,13 +96,40 @@ function enemyActivity(){
             // console.log(enemyUpdate(allEnemies))
             return radius + coordinateGenerator(canvasSize.y - 2*radius)
         })
-                    // .attr("stroke-width", 2)
-                    // .attr("r", 10)
-                    // .transition()
-                    // .duration(500)
-                    // .attr('stroke-width', 0.5)
-                    // .attr("r", 5)
-                    // .ease('sine')
+        .tween('perimeterCheck', function(d, i){
+            return function(){
+                var highScoreEl = d3.select('#highScore'),
+                    scoreEl = d3.select('#currentScore');
+
+                    score = score +1/numbOfEnemies/4 ;
+                    scoreEl.text(Math.floor(score));
+
+                if ( Math.floor(score) > highScore ){
+                    highScore = Math.floor(score);
+                    highScoreEl.text(highScore);
+                };
+
+                allEnemies.each(function(){
+                        // var heroR = heroRadius,
+                    // enemyR = radius;
+                    var enemy = d3.select(this);
+                    var totRad = heroRadius + radius;
+                    var enemyX = enemy.attr('cx'),
+                        enemyY = enemy.attr('cy');
+                    var heroX = hero.attr('cx'),
+                        heroY = hero.attr('cy');
+                    var dist = Math.pow((Math.pow((heroX-enemyX),2) + Math.pow((heroY-enemyY),2)),.5)
+
+                    if ( dist < totRad ){
+                        score = 0;
+                        scoreEl.text(0);
+            }
+
+    })
+
+}
+
+        })
         .each('end', move);
     })()
     // console.log(frequency)
@@ -108,11 +140,11 @@ function enemyActivity(){
 
 // Define basic drag behavior
 var dragmove = function(d){
-    // console.log(d);
+
     d3.select(this)
-        .attr('cx', d.x = Math.max(radius, Math.min(canvasSize.x - radius, d3.event.x)))
-        .attr('cy', d.y = Math.max(radius, Math.min(canvasSize.y - radius, d3.event.y)));
-    // console.log('after');
+        .attr('cx', d.x = Math.max(heroRadius, Math.min(canvasSize.x - heroRadius, d3.event.x)))
+        .attr('cy', d.y = Math.max(heroRadius, Math.min(canvasSize.y - heroRadius, d3.event.y)));
+    // collisionChecker()
 };
 
 var anyDrag = d3.behavior.drag()
@@ -127,24 +159,43 @@ anyDrag.call(hero);
 ////// COLLISION AND SCORES //////
 
 
-var collisionChecker = function(){
-    var highScoreEl = d3.select('#highScore')
-    highScore = Number(highScoreEl.text());
-    score = Number(d3.select('#currentScore').text());
+// var collisionChecker = function(){
+//     var highScoreEl = d3.select('#highScore'),
+//         scoreEl = d3.select('#currentScore'),
+//         highScore = Number(highScoreEl.text()),
+//         score = Number(scoreEl.text())+1;
+//         scoreEl.text(score);
+
+//     if ( score > highScore ){
+//         highScore = score;
+//         highScoreEl.text(highScore);
+//     };
+
+//     allEnemies.each(function(){
+//             // var heroR = heroRadius,
+//         // enemyR = radius;
+//         var enemy = d3.select(this);
+//         var totRad = heroRadius + radius;
+//         var enemyX = enemy.attr('cx'),
+//             enemyY = enemy.attr('cy');
+//         var heroX = hero.attr('cx'),
+//             heroY = hero.attr('cy');
+//         var dist = Math.pow((Math.pow((heroX-enemyX),2) + Math.pow((heroY-enemyY),2)),.5)
+
+//         if ( dist < tot ){
+//             scoreEl.text(0);
+//             console.log('oh nooos...');
+//             console.log('dist: ' + dist);
+//             console.log('relRad: ' + relRad);
+//             console.log('hero: ' + heroX + ', ' + heroY);
+//             console.log('enemy: ' + enemyX + ', ' + enemyY);
+//         }
+
+//     })
+
+// }
 
 
-    if ( score > highScore ){
-        highScore = score;
-        highScoreEl.text(highScore);
-    };
-
-    allEnemies.each(function(){
-        console.log('collisionChecker')
-    })
-
-}
-
-collisionChecker()
 
 //  225 Bush St Fl 12, RocketU, San Francisco, CA 94104-4254, United States
 // d3.selectAll('circle').attr('fill', '#FFF');

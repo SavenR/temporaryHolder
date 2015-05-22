@@ -16,7 +16,18 @@ div.scoreBox {
 }
 
 #gameCanvas {
-    /*background-color: #fff;*/
+    background-color: #fff;
+}
+#oHS {
+    /*position: absolute;*/
+    /*right: 30%;*/
+    /*overflow: hidden;*/
+    float: right;
+}
+#gameContainer {
+    /*display: inline;*/
+    overflow-right: hidden;
+    width: 450px;
 }
 
 .enemy:nth-child(6n) {
@@ -38,6 +49,3 @@ div.scoreBox {
     fill: purple;
 }
 
-/*#highScore {
-    float: right;
-}*/
